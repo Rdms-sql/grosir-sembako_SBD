@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class DetailReturPembelian extends Model
 {
-    protected $table = 'detail_retur_pembelians';
+    protected $primaryKey = 'id';
 
     protected $fillable = [
         'id_retur_beli',
@@ -15,15 +15,8 @@ class DetailReturPembelian extends Model
         'subtotal',
     ];
 
-    // ===== RELASI =====
-
-    public function returPembelian()
-    {
-        return $this->belongsTo(ReturPembelian::class, 'id_retur_beli');
-    }
-
     public function barang()
     {
-        return $this->belongsTo(Barang::class, 'id_barang');
+        return $this->belongsTo(Barang::class, 'id_barang', 'id_barang');
     }
 }

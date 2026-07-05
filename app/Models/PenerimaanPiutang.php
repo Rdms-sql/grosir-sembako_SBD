@@ -16,8 +16,6 @@ class PenerimaanPiutang extends Model
         'metode_bayar',
     ];
 
-    // ===== RELASI =====
-
     public function piutang()
     {
         return $this->belongsTo(Piutang::class, 'id_piutang');
@@ -25,6 +23,6 @@ class PenerimaanPiutang extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'id_user');
+        return $this->belongsTo(User::class, 'id_user', 'id_user');
     }
 }

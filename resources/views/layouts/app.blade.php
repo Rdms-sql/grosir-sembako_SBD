@@ -182,16 +182,15 @@
         <div class="nav-section">Keuangan</div>
         <a href="/hutangs"
            class="nav-link {{ request()->is('hutangs*') ? 'active' : '' }}">
-        <a href="/hutangs"
-           class="nav-link {{ request()->is('hutangs*') ? 'active' : '' }}">
             <i class="bi bi-arrow-down-circle"></i> Hutang
         </a>
-        <a href="/piutang"
-           class="nav-link {{ request()->is('piutang*') ? 'active' : '' }}">
+        <a href="/piutangs"
+           class="nav-link {{ request()->is('piutangs*') ? 'active' : '' }}">
             <i class="bi bi-arrow-up-circle"></i> Piutang
         </a>
 
         <div class="nav-section">Retur</div>
+        
         <a href="/retur-pembelian"
            class="nav-link {{ request()->is('retur-pembelian*') ? 'active' : '' }}">
             <i class="bi bi-arrow-return-left"></i> Retur Pembelian
