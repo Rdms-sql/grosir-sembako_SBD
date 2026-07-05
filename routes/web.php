@@ -10,7 +10,6 @@ use App\Http\Controllers\BarangController;
 use App\Http\Controllers\KatalogController;
 use App\Http\Controllers\HutangController;
 use App\Http\Controllers\PembelianController;
-use App\Http\Controllers\PiutangController;
 use App\Http\Controllers\ReturPembelianController;
 use App\Http\Controllers\ReturPenjualanController;
 
@@ -64,24 +63,9 @@ Route::middleware('auth')->group(function () {
     // Pembelian
     Route::resource('pembelian', PembelianController::class);
     
-    //piutang
-    Route::get('/piutangs', [PiutangController::class, 'index'])->name('piutangs.index');
-    Route::get('/piutangs/{id}', [PiutangController::class, 'show'])->name('piutangs.show');
-    Route::get('/piutangs/{id}/terima', [PiutangController::class, 'terima'])->name('piutangs.terima');
-    Route::post('/piutangs/{id}/terima', [PiutangController::class, 'simpanTerima'])->name('piutangs.simpan-terima');
+    // ReturPembelian
+    Route::resource('retur-pembelian', ReturPembelianController::class);
 
-    // Retur Penjualan
-    Route::get('/retur-penjualan', [ReturPenjualanController::class, 'index'])->name('retur-penjualan.index');
-    Route::get('/retur-penjualan/create', [ReturPenjualanController::class, 'create'])->name('retur-penjualan.create');
-    Route::get('/retur-penjualan/detail/{id}', [ReturPenjualanController::class, 'getDetailPenjualan'])->name('retur-penjualan.detail');
-    Route::post('/retur-penjualan', [ReturPenjualanController::class, 'store'])->name('retur-penjualan.store');
-    Route::get('/retur-penjualan/{id}', [ReturPenjualanController::class, 'show'])->name('retur-penjualan.show');
-    
-    // Retur Pembelian
-    Route::get('/retur-pembelian', [ReturPembelianController::class, 'index'])->name('retur-pembelian.index');
-    Route::get('/retur-pembelian/create', [ReturPembelianController::class, 'create'])->name('retur-pembelian.create');
-    Route::get('/retur-pembelian/detail/{id}', [ReturPembelianController::class, 'getDetailPembelian'])->name('retur-pembelian.detail');
-    Route::post('/retur-pembelian', [ReturPembelianController::class, 'store'])->name('retur-pembelian.store');
-    Route::get('/retur-pembelian/{id}', [ReturPembelianController::class, 'show'])->name('retur-pembelian.show');
-
+    // ReturPenjualan
+    Route::resource('retur-penjualan', ReturPenjualanController::class);
 });
