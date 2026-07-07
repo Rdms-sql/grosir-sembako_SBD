@@ -12,7 +12,13 @@ class PiutangController extends Controller
     public function index()
     {
         $piutangs = Piutang::with('konsumen')->latest()->paginate(10);
-        return view('piutangs.index', compact('piutangs'));
+
+        $totalAktif       = Piutang::where('status', 'belum_lunas')->count();
+        $totalLunas       = Piutang::where('status', 'lunas')->count();
+        $totalOutstanding = Piutang::where('status', 'belum_lunas')->sum('sisa_piutang');
+
+
+        return view('piutangs.index', compact('piutangs', 'totalAktif', 'totalLunas', 'totalOutstanding'));
     }
 
     public function show(string $id)
@@ -30,7 +36,7 @@ class PiutangController extends Controller
         $piutang = Piutang::with('konsumen')->findOrFail($id);
         if ($piutang->status === 'lunas') {
             return redirect()->route('piutangs.show', $id)
-                             ->with('error', 'Piutang ini sudah lunas.');
+                ->with('error', 'Piutang ini sudah lunas.');
         }
         return view('piutangs.terima', compact('piutang'));
     }
@@ -39,14 +45,19 @@ class PiutangController extends Controller
     {
         $piutang = Piutang::findOrFail($id);
 
+        if ($piutang->status === 'lunas') {
+            return redirect()->route('piutangs.show', $id)
+                ->with('error', 'Piutang ini sudah lunas.');
+        }
+
         $request->validate([
             'jumlah_terima' => [
                 'required',
-                'integer',
-                'min:1',
+                'numeric',
+                'min:0.01',
                 'max:' . $piutang->sisa_piutang,
             ],
-            'metode_bayar' => 'required|in:tunai,transfer',
+            'metode_bayar' => ['required', 'in:tunai,transfer'],
         ]);
 
         // Simpan penerimaan piutang
@@ -58,15 +69,12 @@ class PiutangController extends Controller
             'metode_bayar'  => $request->metode_bayar,
         ]);
 
-        // Update sisa piutang
-        $sisaBaru = $piutang->sisa_piutang - $request->jumlah_terima;
-        $piutang->update([
-            'sisa_piutang' => $sisaBaru,
-            'status'       => $sisaBaru <= 0 ? 'lunas' : 'belum_lunas',
-        ]);
+        // Jangan hitung manual — booted() sudah otomatis panggil updateSisaPiutang().
+        // Refresh instance supaya dapat nilai terbaru dari DB untuk pesan sukses.
+        $piutang->refresh();
 
         return redirect()->route('piutangs.show', $id)
-                         ->with('success', 'Penerimaan piutang berhasil! Sisa piutang: Rp '
-                             . number_format($sisaBaru, 0, ',', '.'));
+            ->with('success', 'Penerimaan piutang berhasil! Sisa piutang: Rp '
+                . number_format((float)$piutang->sisa_piutang, 0, ',', '.'));
     }
 }

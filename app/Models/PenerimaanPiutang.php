@@ -18,11 +18,27 @@ class PenerimaanPiutang extends Model
 
     public function piutang()
     {
-        return $this->belongsTo(Piutang::class, 'id_piutang');
+        return $this->belongsTo(Piutang::class, 'id_piutang', 'id_piutang');
     }
 
     public function user()
     {
         return $this->belongsTo(User::class, 'id_user', 'id_user');
+    }
+
+    protected static function booted(): void
+    {
+        static::created(function (PenerimaanPiutang $penerimaan) {
+            $penerimaan->piutang?->updateSisaPiutang();
+        });
+
+        // Kalau ada koreksi/hapus data penerimaan, sisa_piutang juga harus disesuaikan.
+        static::updated(function (PenerimaanPiutang $penerimaan) {
+            $penerimaan->piutang?->updateSisaPiutang();
+        });
+
+        static::deleted(function (PenerimaanPiutang $penerimaan) {
+            $penerimaan->piutang?->updateSisaPiutang();
+        });
     }
 }

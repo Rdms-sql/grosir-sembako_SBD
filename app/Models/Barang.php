@@ -24,36 +24,36 @@ class Barang extends Model
 
     public function supplier()
     {
-        return $this->belongsTo(Supplier::class, 'id_supplier');
+        return $this->belongsTo(Supplier::class, 'id_supplier', 'id_supplier');
     }
 
     public function detailPesanSuppliers()
     {
-        return $this->hasMany(DetailPesanSupplier::class, 'id_barang');
+        return $this->hasMany(DetailPesanSupplier::class, 'id_barang', 'id_barang');
     }
 
     public function detailPesanKonsumens()
     {
-        return $this->hasMany(DetailPesanKonsumen::class, 'id_barang');
+        return $this->hasMany(DetailPesanKonsumen::class, 'id_barang', 'id_barang');
     }
 
     public function detailPembelians()
     {
-        return $this->hasMany(DetailPembelian::class, 'id_barang');
+        return $this->hasMany(DetailPembelian::class, 'id_barang', 'id_barang');
     }
 
     public function detailPenjualans()
     {
-        return $this->hasMany(DetailPenjualan::class, 'id_barang');
+        return $this->hasMany(DetailPenjualan::class, 'id_barang', 'id_barang');
     }
 
     public function detailReturPembelians()
     {
-        return $this->hasMany(DetailReturPembelian::class, 'id_barang');
+        return $this->hasMany(DetailReturPembelian::class, 'id_barang', 'id_barang');
     }
 
     public function detailReturPenjualans()
     {
-        return $this->hasMany(DetailReturPenjualan::class, 'id_barang');
+        return $this->hasMany(DetailReturPenjualan::class, 'id_barang', 'id_barang');
     }
 }

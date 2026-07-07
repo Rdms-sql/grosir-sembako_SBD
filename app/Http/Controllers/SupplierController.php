@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Supplier;
+use Illuminate\Validation\Rule;
 
 class SupplierController extends Controller
 {
@@ -21,7 +22,7 @@ class SupplierController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nama_supplier' => 'required|string|max:100',
+            'nama_supplier' => 'required|string|max:100|unique:suppliers,nama_supplier',
             'no_hp'         => 'nullable|string|max:15',
             'alamat'        => 'nullable|string',
         ]);
@@ -29,7 +30,7 @@ class SupplierController extends Controller
         Supplier::create($request->only('nama_supplier', 'no_hp', 'alamat'));
 
         return redirect()->route('supplier.index')
-                         ->with('success', 'Supplier berhasil ditambahkan.');
+            ->with('success', 'Supplier berhasil ditambahkan.');
     }
 
     public function edit(int $id)
@@ -41,24 +42,35 @@ class SupplierController extends Controller
     public function update(Request $request, int $id)
     {
         $request->validate([
-            'nama_supplier' => 'required|string|max:100',
-            'no_hp'         => 'nullable|string|max:15',
-            'alamat'        => 'nullable|string',
+            'nama_supplier' => [
+                'required',
+                'string',
+                'max:100',
+                Rule::unique('suppliers', 'nama_supplier')->ignore($id, 'id_supplier'),
+            ],
+            'no_hp'  => 'nullable|string|max:15',
+            'alamat' => 'nullable|string',
         ]);
 
         $supplier = Supplier::findOrFail($id);
         $supplier->update($request->only('nama_supplier', 'no_hp', 'alamat'));
 
         return redirect()->route('supplier.index')
-                         ->with('success', 'Supplier berhasil diperbarui.');
+            ->with('success', 'Supplier berhasil diperbarui.');
     }
 
     public function destroy(int $id)
     {
         $supplier = Supplier::findOrFail($id);
+
+        if ($supplier->barangs()->exists()) {
+            return redirect()->route('supplier.index')
+                ->with('error', 'Supplier tidak bisa dihapus karena masih memiliki data barang terkait.');
+        }
+
         $supplier->delete();
 
         return redirect()->route('supplier.index')
-                         ->with('success', 'Supplier berhasil dihapus.');
+            ->with('success', 'Supplier berhasil dihapus.');
     }
 }

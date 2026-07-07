@@ -18,9 +18,19 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
 
         User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+            'nama_lengkap' => 'Admin Utama',
+            'username' => 'admin_grosir',
+            'password' => \Illuminate\Support\Facades\Hash::make('password123'),
+            'role' => 'admin',
         ]);
 
+        $this->call([
+            SupplierSeeder::class,
+            KonsumenSeeder::class,
+            BarangSeeder::class,
+            PenjualanDummySeeder::class, // Seeder dummy untuk memenuhi FK constraint piutangs.id_penjualan
+            PiutangSeeder::class,
+            PenerimaanPiutangSeeder::class,
+        ]);
     }
 }

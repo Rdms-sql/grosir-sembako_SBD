@@ -17,7 +17,7 @@ return new class extends Migration
                 ->constrained('users', 'id_user')
                 ->onDelete('restrict');
             $table->date('tgl_terima');
-            $table->integer('jumlah_terima');
+            $table->decimal('jumlah_terima', 15, 2);
             $table->enum('metode_bayar', ['tunai', 'transfer'])->default('tunai');
             $table->timestamps();
         });
