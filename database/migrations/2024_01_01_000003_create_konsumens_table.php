@@ -13,7 +13,7 @@ return new class extends Migration
             $table->string('nama_konsumen', 100);
             $table->string('no_hp', 15)->nullable();
             $table->text('alamat')->nullable();
-            $table->integer('limit_kredit')->default(0);
+            $table->decimal('limit_kredit', 15, 2)->default(0);
             $table->timestamps();
             $table->softDeletes();
         });

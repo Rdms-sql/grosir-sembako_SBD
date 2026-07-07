@@ -14,8 +14,8 @@ return new class extends Migration
                 ->constrained('suppliers', 'id_supplier')
                 ->onDelete('restrict');
             $table->string('nama_barang', 100);
-            $table->integer('harga_beli');
-            $table->integer('harga_jual');
+            $table->decimal('harga_beli', 15, 2);
+            $table->decimal('harga_jual', 15, 2);
             $table->string('satuan', 20);
             $table->integer('stok')->default(0);
             $table->timestamps();

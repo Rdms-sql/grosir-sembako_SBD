@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Konsumen;
+use Illuminate\Validation\Rule;
 
 class KonsumenController extends Controller
 {
@@ -21,16 +22,16 @@ class KonsumenController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nama_konsumen' => 'required|string|max:100',
+            'nama_konsumen' => 'required|string|max:100|unique:konsumens,nama_konsumen',
             'no_hp'         => 'nullable|string|max:15',
             'alamat'        => 'nullable|string',
-            'limit_kredit'  => 'required|integer|min:0',
+            'limit_kredit'  => 'required|numeric|min:0',
         ]);
 
-        Konsumen::create($request->only('nama_konsumen','no_hp','alamat','limit_kredit'));
+        Konsumen::create($request->only('nama_konsumen', 'no_hp', 'alamat', 'limit_kredit'));
 
         return redirect()->route('konsumen.index')
-                         ->with('success', 'Konsumen berhasil ditambahkan.');
+            ->with('success', 'Konsumen berhasil ditambahkan.');
     }
 
     public function edit(int $id)
@@ -42,25 +43,36 @@ class KonsumenController extends Controller
     public function update(Request $request, int $id)
     {
         $request->validate([
-            'nama_konsumen' => 'required|string|max:100',
-            'no_hp'         => 'nullable|string|max:15',
-            'alamat'        => 'nullable|string',
-            'limit_kredit'  => 'required|integer|min:0',
+            'nama_konsumen' => [
+                'required',
+                'string',
+                'max:100',
+                Rule::unique('konsumens', 'nama_konsumen')->ignore($id, 'id_konsumen'),
+            ],
+            'no_hp'        => 'nullable|string|max:15',
+            'alamat'       => 'nullable|string',
+            'limit_kredit' => 'required|numeric|min:0',
         ]);
 
         $konsumen = Konsumen::findOrFail($id);
-        $konsumen->update($request->only('nama_konsumen','no_hp','alamat','limit_kredit'));
+        $konsumen->update($request->only('nama_konsumen', 'no_hp', 'alamat', 'limit_kredit'));
 
         return redirect()->route('konsumen.index')
-                         ->with('success', 'Konsumen berhasil diperbarui.');
+            ->with('success', 'Konsumen berhasil diperbarui.');
     }
 
     public function destroy(int $id)
     {
         $konsumen = Konsumen::findOrFail($id);
+
+        if ($konsumen->piutangs()->exists() || $konsumen->penjualans()->exists()) {
+            return redirect()->route('konsumen.index')
+                ->with('error', 'Konsumen tidak bisa dihapus karena masih memiliki data piutang atau penjualan terkait.');
+        }
+
         $konsumen->delete();
 
         return redirect()->route('konsumen.index')
-                         ->with('success', 'Konsumen berhasil dihapus.');
+            ->with('success', 'Konsumen berhasil dihapus.');
     }
 }

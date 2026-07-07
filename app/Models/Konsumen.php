@@ -22,16 +22,16 @@ class Konsumen extends Model
 
     public function pemesananKonsumens()
     {
-        return $this->hasMany(PemesananKonsumen::class, 'id_konsumen');
+        return $this->hasMany(PemesananKonsumen::class, 'id_konsumen', 'id_konsumen');
     }
 
     public function penjualans()
     {
-        return $this->hasMany(Penjualan::class, 'id_konsumen');
+        return $this->hasMany(Penjualan::class, 'id_konsumen', 'id_konsumen');
     }
 
     public function piutangs()
     {
-        return $this->hasMany(Piutang::class, 'id_konsumen');
+        return $this->hasMany(Piutang::class, 'id_konsumen', 'id_konsumen');
     }
 }

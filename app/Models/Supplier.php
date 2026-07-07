@@ -21,21 +21,21 @@ class Supplier extends Model
 
     public function barangs()
     {
-        return $this->hasMany(Barang::class, 'id_supplier');
+        return $this->hasMany(Barang::class, 'id_supplier', 'id_supplier');
     }
 
     public function pemesananSuppliers()
     {
-        return $this->hasMany(PemesananSupplier::class, 'id_supplier');
+        return $this->hasMany(PemesananSupplier::class, 'id_supplier', 'id_supplier');
     }
 
     public function pembelians()
     {
-        return $this->hasMany(Pembelian::class, 'id_supplier');
+        return $this->hasMany(Pembelian::class, 'id_supplier', 'id_supplier');
     }
 
     public function hutangs()
     {
-        return $this->hasMany(Hutang::class, 'id_supplier');
+        return $this->hasMany(Hutang::class, 'id_supplier', 'id_supplier');
     }
 }

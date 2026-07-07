@@ -17,8 +17,8 @@ return new class extends Migration
             $table->foreignId('id_konsumen')
                 ->constrained('konsumens', 'id_konsumen')
                 ->onDelete('restrict');
-            $table->integer('total_piutang');
-            $table->integer('sisa_piutang');
+            $table->decimal('total_piutang', 15, 2);
+            $table->decimal('sisa_piutang', 15, 2);
             $table->date('jatuh_tempo');
             $table->enum('status', ['belum_lunas', 'lunas'])->default('belum_lunas');
             $table->timestamps();
